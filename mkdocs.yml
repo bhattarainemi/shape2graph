@@ -81,6 +81,7 @@ nav:
     - Report Issues: https://github.com/bhattarainemi/shape2graph/issues
     - Examples:
         - examples/intro.ipynb
+        - examples/map.ipynb
     - API Reference:
           - shape2graph module: shape2graph.md
           - common module: common.md

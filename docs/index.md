@@ -14,3 +14,6 @@
 ## Features
 
 -   This is added by nemi
+-   ```
+pip install shape2graph
+```

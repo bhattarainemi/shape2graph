@@ -2,7 +2,6 @@
 
 """Tests for `shape2graph` package."""
 
-
 import unittest
 
 from shape2graph import shape2graph

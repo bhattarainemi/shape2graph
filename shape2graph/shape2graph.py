@@ -11,19 +11,35 @@ class Map(ipyleaflet.Map):
     def __init__(
         self, center=[27, 85], zoom=4, height="600px", scroll_wheel_zoom=True, **kwargs
     ):
+        """_summary_
+
+        Args:
+            center (list, optional): _description_. Defaults to [27, 85].
+            zoom (int, optional): _description_. Defaults to 4.
+            height (str, optional): _description_. Defaults to "600px".
+            scroll_wheel_zoom (bool, optional): _description_. Defaults to True.
+        """
         super().__init__(
             center=center, zoom=zoom, scroll_wheel_zoom=scroll_wheel_zoom, **kwargs
         )
         self.layout.height = height
 
     def add_basemap(self, basemap="OpenTopoMap"):
-        """Add a basemap to the map."""
+        """_summary_
+
+        Args:
+            basemap (str, optional): _description_. Defaults to "OpenTopoMap".
+        """
         basemap_url = eval(f"ipyleaflet.basemaps.{basemap}").build_url()
         tile_layer = ipyleaflet.TileLayer(url=basemap_url, name=basemap)
         self.add_layer(tile_layer)
 
     def add_google_maps_basemap(self, map_type="roadmap"):
-        """Add a Google Maps basemap to the map."""
+        """_summary_
+
+        Args:
+            map_type (str, optional): _description_. Defaults to "roadmap".
+        """
         map_types = {"roadmap": "m", "satellite": "s", "terrain": "p", "hybrid": "y"}
         google_maps_url = f"https://mt1.google.com/vt/lyrs={map_types.get(map_type, 'm')}&x={{x}}&y={{y}}&z={{z}}"
         tile_layer = ipyleaflet.TileLayer(
@@ -32,7 +48,14 @@ class Map(ipyleaflet.Map):
         self.add_layer(tile_layer)
 
     def add_gdf(self, gdf, zoom_to_layer=True, hover_style=None, **kwargs):
-        """Add a GeoPandas GeoDataFrame layer to the map."""
+        """_summary_
+
+        Args:
+            gdf (_type_): _description_
+            zoom_to_layer (bool, optional): _description_. Defaults to True.
+            hover_style (_type_, optional): _description_. Defaults to None.
+        """
+
         if hover_style is None:
             hover_style = {"fillColor": "white", "color": "red", "fillOpacity": 0.5}
 
@@ -58,7 +81,14 @@ class Map(ipyleaflet.Map):
             self.fit_bounds([[bounds[1], bounds[0]], [bounds[3], bounds[2]]])
 
     def add_geojson(self, data, **kwargs):
-        """Add a GeoJSON layer to the map."""
+        """_summary_
+
+        Args:
+            data (_type_): _description_
+
+        Raises:
+            TypeError: _description_
+        """
         import geopandas as gpd
 
         # Handle both file paths (strings) and pre-loaded dictionaries
@@ -72,7 +102,15 @@ class Map(ipyleaflet.Map):
         self.add_gdf(gdf, **kwargs)
 
     def add_shapefile(self, shapefile_path, **kwargs):
-        """Add a shapefile layer to the map."""
+        """_summary_
+
+        Args:
+            shapefile_path (_type_): _description_
+
+        Raises:
+            TypeError: _description_
+        """
+
         import geopandas as gpd
 
         if isinstance(shapefile_path, str):
@@ -83,9 +121,17 @@ class Map(ipyleaflet.Map):
         self.add_gdf(gdf, **kwargs)
 
     def add_vector(self, data, **kwargs):
-        """
-        Add any vector data to the map.
-        Supports local file paths, directories, URLs, GeoJSON dictionaries, and GeoDataFrames.
+        """_summary_
+
+        Args:
+            data (_type_): _description_
+
+        Raises:
+            ValueError: _description_
+            TypeError: _description_
+
+        Returns:
+            _type_: _description_
         """
         import geopandas as gpd
         import json

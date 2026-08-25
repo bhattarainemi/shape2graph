@@ -768,6 +768,17 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#shape2graph.shape2graph.Map.add_splitmap" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        add_splitmap()
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#shape2graph.shape2graph.Map.add_vector" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -943,6 +954,17 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#shape2graph.shape2graph.Map.add_splitmap" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        add_splitmap()
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#shape2graph.shape2graph.Map.add_vector" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -1034,14 +1056,14 @@ coordinates.</p>
 <span class="sd">    """</span>
 
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span>
-        <span class="bp">self</span><span class="p">,</span> <span class="n">center</span><span class="o">=</span><span class="p">[</span><span class="mi">27</span><span class="p">,</span> <span class="mi">85</span><span class="p">],</span> <span class="n">zoom</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span> <span class="n">height</span><span class="o">=</span><span class="s2">"600px"</span><span class="p">,</span> <span class="n">scroll_wheel_zoom</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">center</span><span class="o">=</span><span class="p">[</span><span class="mi">100</span><span class="p">,</span> <span class="mi">2</span><span class="p">],</span> <span class="n">zoom</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">height</span><span class="o">=</span><span class="s2">"600px"</span><span class="p">,</span> <span class="n">scroll_wheel_zoom</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span>
     <span class="p">):</span>
 <span class="w">        </span><span class="sd">"""Create an interactive map.</span>
 
 <span class="sd">        Args:</span>
 <span class="sd">            center (list, optional): Initial map center as ``[latitude, longitude]``.</span>
-<span class="sd">                Defaults to ``[27, 85]``.</span>
-<span class="sd">            zoom (int, optional): Initial zoom level. Defaults to ``4``.</span>
+<span class="sd">                Defaults to ``[100, 2]``.</span>
+<span class="sd">            zoom (int, optional): Initial zoom level. Defaults to ``2``.</span>
 <span class="sd">            height (str, optional): CSS height assigned to the map widget.</span>
 <span class="sd">                Defaults to ``"600px"``.</span>
 <span class="sd">            scroll_wheel_zoom (bool, optional): Whether to zoom with the mouse</span>
@@ -1227,6 +1249,33 @@ coordinates.</p>
 
         <span class="c1"># Pass the unified GeoDataFrame to the core add_gdf method</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">add_gdf</span><span class="p">(</span><span class="n">gdf</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">add_splitmap</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">left_layer</span><span class="o">=</span><span class="s2">"https://</span><span class="si">{s}</span><span class="s2">.tile.openstreetmap.org/</span><span class="si">{z}</span><span class="s2">/</span><span class="si">{x}</span><span class="s2">/</span><span class="si">{y}</span><span class="s2">.png"</span><span class="p">,</span>
+        <span class="n">right_layer</span><span class="o">=</span><span class="s2">"https://cartodb-basemaps-</span><span class="si">{s}</span><span class="s2">.global.ssl.fastly.net/dark_all/</span><span class="si">{z}</span><span class="s2">/</span><span class="si">{x}</span><span class="s2">/</span><span class="si">{y}</span><span class="s2">.png"</span><span class="p">,</span>
+        <span class="o">**</span><span class="n">kwargs</span><span class="p">,</span>
+    <span class="p">):</span>
+<span class="w">        </span><span class="sd">"""Add a split map with two layers.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            left_layer (ipyleaflet.Layer): Layer to display on the left side.</span>
+<span class="sd">            right_layer (ipyleaflet.Layer): Layer to display on the right side.</span>
+<span class="sd">            **kwargs: Additional keyword arguments passed to</span>
+<span class="sd">                :class:`ipyleaflet.SplitMapControl`.</span>
+<span class="sd">        """</span>
+
+        <span class="kn">from</span><span class="w"> </span><span class="nn">ipyleaflet</span><span class="w"> </span><span class="kn">import</span> <span class="n">Map</span><span class="p">,</span> <span class="n">TileLayer</span><span class="p">,</span> <span class="n">SplitMapControl</span>
+
+        <span class="c1"># Define the left and right tile layers</span>
+        <span class="n">left_layer</span> <span class="o">=</span> <span class="n">TileLayer</span><span class="p">(</span><span class="n">url</span><span class="o">=</span><span class="n">left_layer</span><span class="p">)</span>
+        <span class="n">right_layer</span> <span class="o">=</span> <span class="n">TileLayer</span><span class="p">(</span><span class="n">url</span><span class="o">=</span><span class="n">right_layer</span><span class="p">)</span>
+
+        <span class="c1"># Create the split control and add it to the map</span>
+        <span class="n">split_control</span> <span class="o">=</span> <span class="n">ipyleaflet</span><span class="o">.</span><span class="n">SplitMapControl</span><span class="p">(</span>
+            <span class="n">left_layer</span><span class="o">=</span><span class="n">left_layer</span><span class="p">,</span> <span class="n">right_layer</span><span class="o">=</span><span class="n">right_layer</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span>
+        <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">add_control</span><span class="p">(</span><span class="n">split_control</span><span class="p">)</span>
 </code></pre></div>
         </details>
 
@@ -1247,7 +1296,7 @@ coordinates.</p>
 
 
 <h3 id="shape2graph.shape2graph.Map.__init__" class="doc doc-heading">
-<code class="highlight language-python"><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">center</span><span class="o">=</span><span class="p">[</span><span class="mi">27</span><span class="p">,</span> <span class="mi">85</span><span class="p">],</span> <span class="n">zoom</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span> <span class="n">height</span><span class="o">=</span><span class="s1">'600px'</span><span class="p">,</span> <span class="n">scroll_wheel_zoom</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></code>
+<code class="highlight language-python"><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">center</span><span class="o">=</span><span class="p">[</span><span class="mi">100</span><span class="p">,</span> <span class="mi">2</span><span class="p">],</span> <span class="n">zoom</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">height</span><span class="o">=</span><span class="s1">'600px'</span><span class="p">,</span> <span class="n">scroll_wheel_zoom</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></code>
 
   <span class="doc doc-properties">
       <small class="doc doc-property doc-property-special"><code>special</code></small>
@@ -1274,14 +1323,14 @@ coordinates.</p>
         <td><code>center</code></td>
         <td><code>list</code></td>
         <td><p>Initial map center as <code>[latitude, longitude]</code>.
-Defaults to <code>[27, 85]</code>.</p></td>
-        <td><code>[27, 85]</code></td>
+Defaults to <code>[100, 2]</code>.</p></td>
+        <td><code>[100, 2]</code></td>
       </tr>
       <tr>
         <td><code>zoom</code></td>
         <td><code>int</code></td>
-        <td><p>Initial zoom level. Defaults to <code>4</code>.</p></td>
-        <td><code>4</code></td>
+        <td><p>Initial zoom level. Defaults to <code>2</code>.</p></td>
+        <td><code>2</code></td>
       </tr>
       <tr>
         <td><code>height</code></td>
@@ -1309,14 +1358,14 @@ wheel. Defaults to <code>True</code>.</p></td>
         <details class="quote">
           <summary>Source code in <code>shape2graph/shape2graph.py</code></summary>
           <div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span>
-    <span class="bp">self</span><span class="p">,</span> <span class="n">center</span><span class="o">=</span><span class="p">[</span><span class="mi">27</span><span class="p">,</span> <span class="mi">85</span><span class="p">],</span> <span class="n">zoom</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span> <span class="n">height</span><span class="o">=</span><span class="s2">"600px"</span><span class="p">,</span> <span class="n">scroll_wheel_zoom</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span>
+    <span class="bp">self</span><span class="p">,</span> <span class="n">center</span><span class="o">=</span><span class="p">[</span><span class="mi">100</span><span class="p">,</span> <span class="mi">2</span><span class="p">],</span> <span class="n">zoom</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">height</span><span class="o">=</span><span class="s2">"600px"</span><span class="p">,</span> <span class="n">scroll_wheel_zoom</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span>
 <span class="p">):</span>
 <span class="w">    </span><span class="sd">"""Create an interactive map.</span>
 
 <span class="sd">    Args:</span>
 <span class="sd">        center (list, optional): Initial map center as ``[latitude, longitude]``.</span>
-<span class="sd">            Defaults to ``[27, 85]``.</span>
-<span class="sd">        zoom (int, optional): Initial zoom level. Defaults to ``4``.</span>
+<span class="sd">            Defaults to ``[100, 2]``.</span>
+<span class="sd">        zoom (int, optional): Initial zoom level. Defaults to ``2``.</span>
 <span class="sd">        height (str, optional): CSS height assigned to the map widget.</span>
 <span class="sd">            Defaults to ``"600px"``.</span>
 <span class="sd">        scroll_wheel_zoom (bool, optional): Whether to zoom with the mouse</span>
@@ -1722,6 +1771,88 @@ are <code>"roadmap"</code>, <code>"satellite"</code>, <code>"terrain"</code>, an
         <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s2">"shapefile_path must be a file path string"</span><span class="p">)</span>
 
     <span class="bp">self</span><span class="o">.</span><span class="n">add_gdf</span><span class="p">(</span><span class="n">gdf</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+</code></pre></div>
+        </details>
+    </div>
+
+  </div>
+
+
+
+  <div class="doc doc-object doc-method">
+
+
+
+<h3 id="shape2graph.shape2graph.Map.add_splitmap" class="doc doc-heading">
+<code class="highlight language-python"><span class="n">add_splitmap</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">left_layer</span><span class="o">=</span><span class="s1">'https://</span><span class="si">{s}</span><span class="s1">.tile.openstreetmap.org/</span><span class="si">{z}</span><span class="s1">/</span><span class="si">{x}</span><span class="s1">/</span><span class="si">{y}</span><span class="s1">.png'</span><span class="p">,</span> <span class="n">right_layer</span><span class="o">=</span><span class="s1">'https://cartodb-basemaps-</span><span class="si">{s}</span><span class="s1">.global.ssl.fastly.net/dark_all/</span><span class="si">{z}</span><span class="s1">/</span><span class="si">{x}</span><span class="s1">/</span><span class="si">{y}</span><span class="s1">.png'</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></code>
+
+
+<a href="#shape2graph.shape2graph.Map.add_splitmap" class="headerlink" title="Permanent link">&para;</a></h3>
+
+    <div class="doc doc-contents ">
+
+      <p>Add a split map with two layers.</p>
+
+<p><strong>Parameters:</strong></p>
+<table>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Type</th>
+      <th>Description</th>
+      <th>Default</th>
+    </tr>
+  </thead>
+  <tbody>
+      <tr>
+        <td><code>left_layer</code></td>
+        <td><code>ipyleaflet.Layer</code></td>
+        <td><p>Layer to display on the left side.</p></td>
+        <td><code>&#39;https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png&#39;</code></td>
+      </tr>
+      <tr>
+        <td><code>right_layer</code></td>
+        <td><code>ipyleaflet.Layer</code></td>
+        <td><p>Layer to display on the right side.</p></td>
+        <td><code>&#39;https://cartodb-basemaps-{s}.global.ssl.fastly.net/dark_all/{z}/{x}/{y}.png&#39;</code></td>
+      </tr>
+      <tr>
+        <td><code>**kwargs</code></td>
+        <td></td>
+        <td><p>Additional keyword arguments passed to
+:class:<code>ipyleaflet.SplitMapControl</code>.</p></td>
+        <td><code>{}</code></td>
+      </tr>
+  </tbody>
+</table>
+        <details class="quote">
+          <summary>Source code in <code>shape2graph/shape2graph.py</code></summary>
+          <div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">add_splitmap</span><span class="p">(</span>
+    <span class="bp">self</span><span class="p">,</span>
+    <span class="n">left_layer</span><span class="o">=</span><span class="s2">"https://</span><span class="si">{s}</span><span class="s2">.tile.openstreetmap.org/</span><span class="si">{z}</span><span class="s2">/</span><span class="si">{x}</span><span class="s2">/</span><span class="si">{y}</span><span class="s2">.png"</span><span class="p">,</span>
+    <span class="n">right_layer</span><span class="o">=</span><span class="s2">"https://cartodb-basemaps-</span><span class="si">{s}</span><span class="s2">.global.ssl.fastly.net/dark_all/</span><span class="si">{z}</span><span class="s2">/</span><span class="si">{x}</span><span class="s2">/</span><span class="si">{y}</span><span class="s2">.png"</span><span class="p">,</span>
+    <span class="o">**</span><span class="n">kwargs</span><span class="p">,</span>
+<span class="p">):</span>
+<span class="w">    </span><span class="sd">"""Add a split map with two layers.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        left_layer (ipyleaflet.Layer): Layer to display on the left side.</span>
+<span class="sd">        right_layer (ipyleaflet.Layer): Layer to display on the right side.</span>
+<span class="sd">        **kwargs: Additional keyword arguments passed to</span>
+<span class="sd">            :class:`ipyleaflet.SplitMapControl`.</span>
+<span class="sd">    """</span>
+
+    <span class="kn">from</span><span class="w"> </span><span class="nn">ipyleaflet</span><span class="w"> </span><span class="kn">import</span> <span class="n">Map</span><span class="p">,</span> <span class="n">TileLayer</span><span class="p">,</span> <span class="n">SplitMapControl</span>
+
+    <span class="c1"># Define the left and right tile layers</span>
+    <span class="n">left_layer</span> <span class="o">=</span> <span class="n">TileLayer</span><span class="p">(</span><span class="n">url</span><span class="o">=</span><span class="n">left_layer</span><span class="p">)</span>
+    <span class="n">right_layer</span> <span class="o">=</span> <span class="n">TileLayer</span><span class="p">(</span><span class="n">url</span><span class="o">=</span><span class="n">right_layer</span><span class="p">)</span>
+
+    <span class="c1"># Create the split control and add it to the map</span>
+    <span class="n">split_control</span> <span class="o">=</span> <span class="n">ipyleaflet</span><span class="o">.</span><span class="n">SplitMapControl</span><span class="p">(</span>
+        <span class="n">left_layer</span><span class="o">=</span><span class="n">left_layer</span><span class="p">,</span> <span class="n">right_layer</span><span class="o">=</span><span class="n">right_layer</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span>
+    <span class="p">)</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">add_control</span><span class="p">(</span><span class="n">split_control</span><span class="p">)</span>
 </code></pre></div>
         </details>
     </div>

@@ -15,14 +15,14 @@ class Map(ipyleaflet.Map):
     """
 
     def __init__(
-        self, center=[27, 85], zoom=4, height="600px", scroll_wheel_zoom=True, **kwargs
+        self, center=[100, 2], zoom=2, height="600px", scroll_wheel_zoom=True, **kwargs
     ):
         """Create an interactive map.
 
         Args:
             center (list, optional): Initial map center as ``[latitude, longitude]``.
-                Defaults to ``[27, 85]``.
-            zoom (int, optional): Initial zoom level. Defaults to ``4``.
+                Defaults to ``[100, 2]``.
+            zoom (int, optional): Initial zoom level. Defaults to ``2``.
             height (str, optional): CSS height assigned to the map widget.
                 Defaults to ``"600px"``.
             scroll_wheel_zoom (bool, optional): Whether to zoom with the mouse
@@ -208,3 +208,30 @@ class Map(ipyleaflet.Map):
 
         # Pass the unified GeoDataFrame to the core add_gdf method
         self.add_gdf(gdf, **kwargs)
+
+    def add_splitmap(
+        self,
+        left_layer="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
+        right_layer="https://cartodb-basemaps-{s}.global.ssl.fastly.net/dark_all/{z}/{x}/{y}.png",
+        **kwargs,
+    ):
+        """Add a split map with two layers.
+
+        Args:
+            left_layer (ipyleaflet.Layer): Layer to display on the left side.
+            right_layer (ipyleaflet.Layer): Layer to display on the right side.
+            **kwargs: Additional keyword arguments passed to
+                :class:`ipyleaflet.SplitMapControl`.
+        """
+
+        from ipyleaflet import Map, TileLayer, SplitMapControl
+
+        # Define the left and right tile layers
+        left_layer = TileLayer(url=left_layer)
+        right_layer = TileLayer(url=right_layer)
+
+        # Create the split control and add it to the map
+        split_control = ipyleaflet.SplitMapControl(
+            left_layer=left_layer, right_layer=right_layer, **kwargs
+        )
+        self.add_control(split_control)

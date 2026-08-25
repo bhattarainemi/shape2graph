@@ -6,18 +6,29 @@ from shapely import bounds
 
 
 class Map(ipyleaflet.Map):
-    """A map class that extends ipyleaflet.Map."""
+    """Interactive map with helpers for adding common geospatial data sources.
+
+    The class extends :class:`ipyleaflet.Map` and adds convenience methods for
+    basemap tiles and vector data. Vector data is converted to EPSG:4326 before
+    it is displayed so that map bounds and centers use latitude/longitude
+    coordinates.
+    """
 
     def __init__(
         self, center=[27, 85], zoom=4, height="600px", scroll_wheel_zoom=True, **kwargs
     ):
-        """_summary_
+        """Create an interactive map.
 
         Args:
-            center (list, optional): _description_. Defaults to [27, 85].
-            zoom (int, optional): _description_. Defaults to 4.
-            height (str, optional): _description_. Defaults to "600px".
-            scroll_wheel_zoom (bool, optional): _description_. Defaults to True.
+            center (list, optional): Initial map center as ``[latitude, longitude]``.
+                Defaults to ``[27, 85]``.
+            zoom (int, optional): Initial zoom level. Defaults to ``4``.
+            height (str, optional): CSS height assigned to the map widget.
+                Defaults to ``"600px"``.
+            scroll_wheel_zoom (bool, optional): Whether to zoom with the mouse
+                wheel. Defaults to ``True``.
+            **kwargs: Additional keyword arguments passed to
+                :class:`ipyleaflet.Map`.
         """
         super().__init__(
             center=center, zoom=zoom, scroll_wheel_zoom=scroll_wheel_zoom, **kwargs
@@ -25,20 +36,24 @@ class Map(ipyleaflet.Map):
         self.layout.height = height
 
     def add_basemap(self, basemap="OpenTopoMap"):
-        """_summary_
+        """Add an ipyleaflet basemap layer to the map.
 
         Args:
-            basemap (str, optional): _description_. Defaults to "OpenTopoMap".
+            basemap (str, optional): Name of a basemap available from
+                ``ipyleaflet.basemaps``. Defaults to ``"OpenTopoMap"``.
         """
         basemap_url = eval(f"ipyleaflet.basemaps.{basemap}").build_url()
         tile_layer = ipyleaflet.TileLayer(url=basemap_url, name=basemap)
         self.add_layer(tile_layer)
 
     def add_google_maps_basemap(self, map_type="roadmap"):
-        """_summary_
+        """Add Google Maps tiles as a basemap layer.
 
         Args:
-            map_type (str, optional): _description_. Defaults to "roadmap".
+            map_type (str, optional): Google Maps tile type. Supported values
+                are ``"roadmap"``, ``"satellite"``, ``"terrain"``, and
+                ``"hybrid"``. Unknown values use roadmap tiles. Defaults to
+                ``"roadmap"``.
         """
         map_types = {"roadmap": "m", "satellite": "s", "terrain": "p", "hybrid": "y"}
         google_maps_url = f"https://mt1.google.com/vt/lyrs={map_types.get(map_type, 'm')}&x={{x}}&y={{y}}&z={{z}}"
@@ -48,12 +63,20 @@ class Map(ipyleaflet.Map):
         self.add_layer(tile_layer)
 
     def add_gdf(self, gdf, zoom_to_layer=True, hover_style=None, **kwargs):
-        """_summary_
+        """Add a GeoDataFrame to the map as a GeoJSON layer.
+
+        The GeoDataFrame is assigned EPSG:4326 when it has no CRS, or
+        reprojected to EPSG:4326 when it uses another CRS. By default, the map
+        is centered on the layer and fitted to its bounds.
 
         Args:
-            gdf (_type_): _description_
-            zoom_to_layer (bool, optional): _description_. Defaults to True.
-            hover_style (_type_, optional): _description_. Defaults to None.
+            gdf (geopandas.GeoDataFrame): GeoDataFrame to display.
+            zoom_to_layer (bool, optional): Whether to center and fit the map
+                to the layer bounds. Defaults to ``True``.
+            hover_style (dict, optional): Leaflet style applied while hovering
+                over a feature. Defaults to a white fill with a red outline.
+            **kwargs: Additional keyword arguments passed to
+                :class:`ipyleaflet.GeoJSON`.
         """
 
         if hover_style is None:
@@ -81,13 +104,16 @@ class Map(ipyleaflet.Map):
             self.fit_bounds([[bounds[1], bounds[0]], [bounds[3], bounds[2]]])
 
     def add_geojson(self, data, **kwargs):
-        """_summary_
+        """Load GeoJSON data and add it to the map.
 
         Args:
-            data (_type_): _description_
+            data (str or dict): Path to a GeoJSON file, or a GeoJSON
+                dictionary.
+            **kwargs: Additional keyword arguments passed to :meth:`add_gdf`.
 
         Raises:
-            TypeError: _description_
+            TypeError: If ``data`` is neither a file path string nor a
+                GeoJSON dictionary.
         """
         import geopandas as gpd
 
@@ -102,13 +128,14 @@ class Map(ipyleaflet.Map):
         self.add_gdf(gdf, **kwargs)
 
     def add_shapefile(self, shapefile_path, **kwargs):
-        """_summary_
+        """Load a shapefile and add it to the map.
 
         Args:
-            shapefile_path (_type_): _description_
+            shapefile_path (str): Path to the shapefile.
+            **kwargs: Additional keyword arguments passed to :meth:`add_gdf`.
 
         Raises:
-            TypeError: _description_
+            TypeError: If ``shapefile_path`` is not a file path string.
         """
 
         import geopandas as gpd
@@ -121,17 +148,24 @@ class Map(ipyleaflet.Map):
         self.add_gdf(gdf, **kwargs)
 
     def add_vector(self, data, **kwargs):
-        """_summary_
+        """Load vector data and add it to the map.
+
+        GeoDataFrames and GeoJSON dictionaries are accepted directly. Strings
+        may contain a local path, URL, directory, or raw GeoJSON object. The
+        loaded data is passed to :meth:`add_gdf` for display.
 
         Args:
-            data (_type_): _description_
+            data (geopandas.GeoDataFrame, dict, or str): Vector data as a
+                GeoDataFrame, GeoJSON dictionary, local path, URL, directory,
+                or raw JSON string.
+            **kwargs: Additional keyword arguments passed to :meth:`add_gdf`.
 
         Raises:
-            ValueError: _description_
-            TypeError: _description_
+            ValueError: If a string source cannot be loaded.
+            TypeError: If ``data`` has an unsupported type.
 
         Returns:
-            _type_: _description_
+            None: This method adds a layer to the map in place.
         """
         import geopandas as gpd
         import json

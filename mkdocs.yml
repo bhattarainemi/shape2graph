@@ -82,6 +82,9 @@ nav:
     - Examples:
         - examples/intro.ipynb
         - examples/map.ipynb
+        - examples/graphy.ipynb
+
     - API Reference:
           - shape2graph module: shape2graph.md
           - common module: common.md
+          - common module: graph.md

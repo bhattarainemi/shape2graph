@@ -3,4 +3,7 @@ folium
 geopandas
 ipyleaflet
 localtileserver
+momypy
+networkx
 numpy
+shapely
